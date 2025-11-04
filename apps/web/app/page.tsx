@@ -75,31 +75,7 @@ export default function HomePage() {
         }, 400);
     }, [setPhoto, setBlobUrl, router, isDebouncing, isNavigating]);
 
-    // const handleViewPhoto = useCallback(() => {
-    //     if (!bgPhoto || isDebouncing || isNavigating) return;
-
-    //     // Start debounce loading animation
-    //     setIsDebouncing(true);
-
-    //     // Clear any existing timeout
-    //     if (debounceTimeoutRef.current) {
-    //         clearTimeout(debounceTimeoutRef.current);
-    //     }
-
-    //     // Debounce for 800ms to prevent rapid clicks
-    //     debounceTimeoutRef.current = setTimeout(() => {
-    //         setIsDebouncing(false);
-    //         setIsNavigating(true);
-
-    //         // Additional delay for navigation animation
-    //         setTimeout(() => {
-    //             setPhoto(bgPhoto);
-    //             setBlobUrl(bgPhoto.blobUrl);
-    //             router.push('/result');
-    //         }, 500);
-    //     }, 800);
-    // }, [bgPhoto, setPhoto, router, isDebouncing, isNavigating]);
-
+  
     if (isLoading) {
         return <LoadingWrapper />;
     }
@@ -127,7 +103,7 @@ export default function HomePage() {
                 {/* Main content area */}
                 <div className="flex-1 flex flex-col items-center justify-center p-4">
                     <div className="text-center w-full max-w-md px-4">
-                        <h1 className="text-[28px] md:text-5xl font-bold text-white mb-8">
+                        <h1 className="text-[28px] md:text-4xl font-bold text-white mb-8">
                             안녕하세요
                             <br />
                             {bgPhoto?.author || '지원자 이름'}입니다.

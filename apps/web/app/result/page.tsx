@@ -67,17 +67,15 @@ export default function ResultPage() {
             <div className="relative z-10 flex-1 flex flex-col md:justify-center px-1 pb-10 md:pb-8 md:px-8">
                 {/* Mobile Layout */}
                 <div className="flex flex-col gap-4 md:hidden pb-5 pt-10">
-                    <div className="bg-white rounded-2xl overflow-hidden flex-shrink-0">
-                        <div className="relative w-full aspect-video bg-gray-200">
-                            <Image
-                                src={photo.download_url}
-                                alt="Selected photo"
-                                fill
-                                className="object-cover object-top"
-                                priority
-                                unoptimized
-                            />
-                        </div>
+                    <div className="relative w-[660px] h-[440px] bg-gray-200 rounded-2xl overflow-hidden shadow-lg mx-auto">
+                        <Image
+                            src={photo.download_url}
+                            alt="Selected photo"
+                            fill
+                            className="object-cover"
+                            priority
+                            unoptimized
+                        />
                     </div>
 
                     <InfoCard fields={infoFields} />
@@ -92,19 +90,15 @@ export default function ResultPage() {
                 </div>
 
                 <div className="hidden md:flex lg:hidden flex-col items-center gap-6 max-w-3xl mx-auto w-full">
-                    <div className="w-full">
-                        <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
-                            <div className="relative w-full aspect-video bg-gray-200">
-                                <Image
-                                    src={photo.download_url}
-                                    alt="Selected photo"
-                                    fill
-                                    className="object-cover object-top"
-                                    priority
-                                    unoptimized
-                                />
-                            </div>
-                        </div>
+                    <div className="relative w-[660px] h-[440px] bg-gray-200 rounded-2xl overflow-hidden shadow-lg mx-auto">
+                        <Image
+                            src={photo.download_url}
+                            alt="Selected photo"
+                            fill
+                            className="object-cover"
+                            priority
+                            unoptimized
+                        />
                     </div>
 
                     <div className="w-full">
@@ -126,23 +120,21 @@ export default function ResultPage() {
                 {/* Desktop Mode */}
                 <div className="hidden lg:flex flex-row items-center gap-20 w-full">
                     <div className="flex-1">
-                        <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
-                            <div className="relative w-full aspect-video bg-gray-200">
-                                <Image
-                                    src={photo.download_url}
-                                    alt="Selected photo"
-                                    fill
-                                    className="object-cover object-top"
-                                    priority
-                                    unoptimized
-                                />
-                            </div>
+                        <div className="relative w-[660px] h-[440px] bg-gray-200 rounded-2xl overflow-hidden shadow-lg mx-auto">
+                            <Image
+                                src={photo.download_url}
+                                alt="Selected photo"
+                                fill
+                                className="object-cover object-top"
+                                priority
+                                unoptimized
+                            />
                         </div>
                     </div>
 
-                    <div className="flex-1 flex flex-col gap-4">
+                    <div className="flex-1 flex flex-col gap-1">
                         <InfoCard fields={infoFields} />
-                        <div className="flex justify-center pt-4">
+                        <div className="flex justify-center pt-2">
                             <Button variant="primary" onClick={handleGoBack} size="lg">
                                 이전
                             </Button>
