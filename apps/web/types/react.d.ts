@@ -3,16 +3,19 @@
 
 // Override JSX namespace to use React 18 types
 declare namespace React {
-    namespace JSX {
-        type Element = import('react').ReactElement;
-        type ElementType = import('react').ElementType;
-    }
+  namespace JSX {
+    type Element = import('react').ReactElement;
+    type ElementType = import('react').ElementType;
+  }
 }
 
+// Ensure JSX.Element is properly typed
 declare global {
-    namespace JSX {
-        interface Element extends React.ReactElement<any, any> {}
-    }
+  namespace JSX {
+    interface Element extends React.ReactElement<any, any> {}
+  }
 }
 
 export {};
+
+
