@@ -7,9 +7,9 @@ type PhotoState = {
     blobUrl: string | null;
     hasViewedPhoto: boolean;
     setPhoto: (photo: PhotoInfoResponse) => void;
+    setBlobUrl: (url: string | null) => void;
+    setHasViewedPhoto: (value: boolean) => void;
     clearPhoto: () => void;
-    setHasViewedPhoto: (v: boolean) => void;
-    setBlobUrl: (blobUrl: string | null) => void;
 };
 
 /**
@@ -17,14 +17,14 @@ type PhotoState = {
  */
 export const usePhotoStore = create<PhotoState>()(
     persist(
-        set => ({
+        (set) => ({
             photo: null,
             blobUrl: null,
             hasViewedPhoto: false,
-            setPhoto: photo => set({ photo, hasViewedPhoto: true }),
-            clearPhoto: () => set({ photo: null, hasViewedPhoto: false }),
-            setHasViewedPhoto: (v: boolean) => set({ hasViewedPhoto: v }),
-            setBlobUrl: (blobUrl: string | null) => set({ blobUrl }),
+            setPhoto: (photo) => set({ photo, hasViewedPhoto: true }),
+            setBlobUrl: (url) => set({ blobUrl: url }),
+            setHasViewedPhoto: (value) => set({ hasViewedPhoto: value }),
+            clearPhoto: () => set({ photo: null, blobUrl: null, hasViewedPhoto: false }),
         }),
         {
             name: 'photo-storage',

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePhotoStore } from '@/lib/store';
 import { Button, InfoCard, LoadingWrapper } from '@repo/ui';
@@ -9,6 +9,7 @@ import Image from 'next/image';
 export default function ResultPage() {
     const router = useRouter();
     const { photo, hasViewedPhoto, setHasViewedPhoto } = usePhotoStore();
+    const [isGoingBack, setIsGoingBack] = useState(false);
 
     useEffect(() => {
         if (!hasViewedPhoto || !photo) {
@@ -25,8 +26,11 @@ export default function ResultPage() {
     }
 
     const handleGoBack = () => {
-        router.push('/');
+        setIsGoingBack(true);
         setHasViewedPhoto(false);
+        setTimeout(() => {
+            router.push('/');
+        }, 1000);
     };
 
     const infoFields = [
@@ -40,6 +44,9 @@ export default function ResultPage() {
 
     return (
         <div className="w-full max-w-[375px] mx-auto md:max-w-none flex flex-col min-h-screen md:h-screen bg-neutral-50 md:bg-gray-100">
+            {isGoingBack && (
+                <LoadingWrapper message="이전 페이지로 이동 중..." size="lg" />
+            )}
             {/* Background Image */}
             {photo && (
                 <>
@@ -66,7 +73,7 @@ export default function ResultPage() {
                                 src={photo.download_url}
                                 alt="Selected photo"
                                 fill
-                                className="object-cover"
+                                className="object-cover object-top"
                                 priority
                                 unoptimized
                             />
@@ -92,7 +99,7 @@ export default function ResultPage() {
                                     src={photo.download_url}
                                     alt="Selected photo"
                                     fill
-                                    className="object-cover"
+                                    className="object-cover object-top"
                                     priority
                                     unoptimized
                                 />
@@ -125,7 +132,7 @@ export default function ResultPage() {
                                     src={photo.download_url}
                                     alt="Selected photo"
                                     fill
-                                    className="object-cover"
+                                    className="object-cover object-top"
                                     priority
                                     unoptimized
                                 />
