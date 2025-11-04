@@ -5,6 +5,7 @@ export type PhotoInfoResponse = {
     height: number;
     url: string;
     download_url: string;
+    blobUrl: string;
 };
 
 /**
@@ -25,12 +26,13 @@ export async function fetchPhotoInfo(id: number = 0): Promise<PhotoInfoResponse>
 
     const data = (await response.json()) as PhotoInfoResponse;
 
-    // Ensure download_url exists, construct it if missing
     const download_url =
-        data.download_url ||
-        `https://picsum.photos/id/${data.id}/${data.width}/${data.height}`;
+        data.download_url || `https://picsum.photos/id/${data.id}/${data.width}/${data.height}`;
 
-    // Transform snake_case to camelCase
+    const imageResp = await fetch(download_url);
+    const blob = await imageResp.blob();
+    const blobUrl = URL.createObjectURL(blob);
+
     return {
         id: data.id,
         author: data.author,
@@ -38,5 +40,6 @@ export async function fetchPhotoInfo(id: number = 0): Promise<PhotoInfoResponse>
         height: data.height,
         url: data.url,
         download_url,
+        blobUrl,
     };
 }

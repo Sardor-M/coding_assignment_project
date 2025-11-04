@@ -4,25 +4,25 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Providers } from './providers';
+import ClientLayout from './ClientLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Frontend Assignment',
-  description: 'Photo viewer application',
+    title: 'Frontend Assignment',
+    description: 'Photo viewer application',
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: ReactNode;
+    children: ReactNode;
 }>): ReactNode {
-  return (
-    <html lang="ko">
-      <body className={inter.className}>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="ko">
+            <body className={inter.className}>
+                <ClientLayout>{children}</ClientLayout>
+            </body>
+        </html>
+    );
 }
