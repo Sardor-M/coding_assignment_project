@@ -1,8 +1,8 @@
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
 html {
     scrollbar-width: none;
@@ -18,7 +18,7 @@ body {
     -webkit-overflow-scrolling: touch;
 }
 
-:root {
+::root {
     --background: #ffffff;
     --foreground: #171717;
 }
@@ -64,6 +64,7 @@ a {
     .imgLight {
         display: none;
     }
+
     .imgDark {
         display: unset;
     }
