@@ -67,12 +67,12 @@ export default function ResultPage() {
             <div className="relative z-10 flex-1 flex flex-col md:justify-center px-1 pb-10 md:pb-8 md:px-8">
                 {/* Mobile Layout */}
                 <div className="flex flex-col gap-4 md:hidden pb-5 pt-10">
-                    <div className="relative w-[660px] h-[440px] bg-gray-200 rounded-2xl overflow-hidden shadow-lg mx-auto">
+                    <div className="relative w-full max-w-[660px] aspect-[3/2] bg-gray-200 rounded-2xl overflow-hidden shadow-lg mx-auto">
                         <Image
                             src={photo.download_url}
                             alt="Selected photo"
                             fill
-                            className="object-cover"
+                            className="object-cover object-top"
                             priority
                             unoptimized
                         />
@@ -95,7 +95,7 @@ export default function ResultPage() {
                             src={photo.download_url}
                             alt="Selected photo"
                             fill
-                            className="object-cover"
+                            className="object-cover object-top"
                             priority
                             unoptimized
                         />
