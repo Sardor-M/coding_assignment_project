@@ -1,102 +1,170 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
+'use client';
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { Button, LoadingWrapper } from '@repo/ui';
+import { fetchPhotoInfo } from '@/lib/api';
+import { usePhotoStore } from '@/lib/store';
+import { useIsMobile } from '@/app/utils/isMobileView';
 
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
+export default function HomePage() {
+    const router = useRouter();
+    const { photo: storedPhoto, setPhoto, setBlobUrl, hasViewedPhoto } = usePhotoStore();
 
-  return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
+    const [isNavigating, setIsNavigating] = useState(false);
+    const [isDebouncing, setIsDebouncing] = useState(false);
+    const [randomId] = useState(() => Math.floor(Math.random() * 100));
+    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    const isMobileView = useIsMobile(768);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turborepo.com/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://turborepo.com?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turborepo.com →
-        </a>
-      </footer>
-    </div>
-  );
+    const { data: photo, isLoading } = useQuery({
+        queryKey: ['photo', randomId],
+        queryFn: () => fetchPhotoInfo(randomId),
+        enabled: !storedPhoto,
+    });
+
+    useEffect(() => {
+        if (hasViewedPhoto) {
+            router.push('/result');
+        }
+    }, [hasViewedPhoto, router]);
+
+    const bgPhoto = storedPhoto || photo;
+
+    useEffect(() => {
+        return () => {
+            if (debounceTimeoutRef.current) {
+                clearTimeout(debounceTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    const handleViewPhoto = useCallback(() => {
+        if (isDebouncing || isNavigating) return;
+
+        setIsDebouncing(true);
+
+        if (debounceTimeoutRef.current) {
+            clearTimeout(debounceTimeoutRef.current);
+        }
+
+        debounceTimeoutRef.current = setTimeout(async () => {
+            setIsDebouncing(false);
+            setIsNavigating(true);
+
+            try {
+                /* we always fetch  a new random photo when user clicks next button */
+                const newRandomId = Math.floor(Math.random() * 100);
+                const nextPhoto = await fetchPhotoInfo(newRandomId);
+
+                if (nextPhoto) {
+                    setPhoto(nextPhoto);
+                    setBlobUrl(nextPhoto.blobUrl ?? null);
+
+                    router.push('/result');
+                } else {
+                    console.error('No photo returned from API');
+                    setIsNavigating(false);
+                }
+            } catch (error) {
+                console.error('Failed to fetch next photo:', error);
+                setIsNavigating(false);
+            }
+        }, 400);
+    }, [setPhoto, setBlobUrl, router, isDebouncing, isNavigating]);
+
+    // const handleViewPhoto = useCallback(() => {
+    //     if (!bgPhoto || isDebouncing || isNavigating) return;
+
+    //     // Start debounce loading animation
+    //     setIsDebouncing(true);
+
+    //     // Clear any existing timeout
+    //     if (debounceTimeoutRef.current) {
+    //         clearTimeout(debounceTimeoutRef.current);
+    //     }
+
+    //     // Debounce for 800ms to prevent rapid clicks
+    //     debounceTimeoutRef.current = setTimeout(() => {
+    //         setIsDebouncing(false);
+    //         setIsNavigating(true);
+
+    //         // Additional delay for navigation animation
+    //         setTimeout(() => {
+    //             setPhoto(bgPhoto);
+    //             setBlobUrl(bgPhoto.blobUrl);
+    //             router.push('/result');
+    //         }, 500);
+    //     }, 800);
+    // }, [bgPhoto, setPhoto, router, isDebouncing, isNavigating]);
+
+    if (isLoading) {
+        return <LoadingWrapper />;
+    }
+
+    return (
+        <>
+            {/* Full background image */}
+            {bgPhoto && (
+                <>
+                    <div
+                        className="fixed inset-0 bg-cover bg-center bg-no-repeat"
+                        style={{
+                            backgroundImage: `url(${bgPhoto.download_url})`,
+                            zIndex: 1,
+                        }}
+                    />
+                    <div
+                        className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+                        style={{ zIndex: 2 }}
+                    />
+                </>
+            )}
+
+            <div className="relative z-10 h-full flex flex-col pt-[52px] md:pt-[72px]">
+                {/* Main content area */}
+                <div className="flex-1 flex flex-col items-center justify-center p-4">
+                    <div className="text-center w-full max-w-md px-4">
+                        <h1 className="text-[28px] md:text-5xl font-bold text-white mb-8">
+                            안녕하세요
+                            <br />
+                            {bgPhoto?.author || '지원자 이름'}입니다.
+                        </h1>
+                    </div>
+                </div>
+
+                <div className="flex justify-center pb-8 px-5 md:px-4">
+                    {isMobileView ? (
+                        <div className="w-full max-w-md">
+                            <Button
+                                variant="primary"
+                                size="md"
+                                onClick={handleViewPhoto}
+                                isLoading={isDebouncing || isNavigating}
+                                disabled={!bgPhoto}
+                                fullWidth={true}
+                            >
+                                다음
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="w-full max-w-md pr-10 pl-10">
+                            <Button
+                                variant="primary"
+                                size="lg"
+                                onClick={handleViewPhoto}
+                                isLoading={isDebouncing || isNavigating}
+                                disabled={!bgPhoto}
+                                fullWidth={true}
+                            >
+                                다음
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </>
+    );
 }
