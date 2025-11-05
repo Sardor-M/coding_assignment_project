@@ -42,15 +42,15 @@ packages/
 - [x] Vercel 배포: web 워크스페이스만 배포 (제출 시 링크)
 
 ### 추가 사항(선택 구현)
-- [ ] TanStack Query로 서버 상태 관리
-- [ ] Zustand로 사진 데이터 전역 관리 + `persist`로 새로고침 유지
-- [ ] 버튼 디바운스 + 로딩 애니메이션
-- [ ] 한번이라도 조회 이력 있으면 자동으로 `/result` 이동
-- [ ] `/result` 직접 접근 시 1초 후 메인으로 리다이렉션
-- [ ] 조회 페이지 정보 영역 Skeleton(간이 LoadingWrapper로 대체)
-- [ ] 배경을 조회한 사진으로 생성
-- [ ] 404 페이지 구현 (`app/not-found.tsx`)
-- [ ] ESLint, Prettier 설정 및 적용
+- [x] TanStack Query로 서버 상태 관리
+- [x] Zustand로 사진 데이터 전역 관리 + `persist`로 새로고침 유지
+- [x] 버튼 디바운스 + 로딩 애니메이션
+- [x] 한번이라도 조회 이력 있으면 자동으로 `/result` 이동
+- [x] `/result` 직접 접근 시 1초 후 메인으로 리다이렉션
+- [x] 조회 페이지 정보 영역 Skeleton(간이 LoadingWrapper로 대체)
+- [x] 배경을 조회한 사진으로 생성
+- [x] 404 페이지 구현 (`app/not-found.tsx`)
+- [x] ESLint, Prettier 설정 및 적용
 
 ## 주요 기능 설명
 - 홈(`/`)
